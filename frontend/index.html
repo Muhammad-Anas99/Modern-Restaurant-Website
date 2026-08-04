@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foundry & Flame — Modern Wood-Fired Kitchen</title>
+<meta name="description" content="Order wood-fired, live-coal cooking from Foundry & Flame. Delivered fast, cooked over real fire." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="loading-screen" aria-hidden="true">
+  <div class="ember-loader">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<div id="toast-container" aria-live="polite"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner container">
+    <a href="#home" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="34" height="34"><path d="M20 3c3 6-2 8-2 13 0 3.5 2.8 6 6.3 6 2.6 0 4.7-1.5 5.7-3.6C31.5 22 33 26 33 29.5 33 35.3 27.1 40 20 40S7 35.3 7 29.5C7 20 14 15 14 9c0-2.5 1.2-4.7 3-6 .8 3.2 2.3 4.6 3 0z"/></svg>
+      </span>
+      <span class="brand-text">Foundry <em>&</em> Flame</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Primary">
+      <a href="#menu">Menu</a>
+      <a href="#offers">Offers</a>
+      <a href="#story">Our Story</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Search menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn cart-btn" id="cartToggle" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-bar" id="searchBar">
+    <div class="container search-bar-inner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search the menu — try 'wings' or 'smoked'">
+      <button id="searchClose" aria-label="Close search">&times;</button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#menu">Menu</a>
+  <a href="#offers">Offers</a>
+  <a href="#story">Our Story</a>
+  <a href="#gallery">Gallery</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="eyebrow">Cooked over real fire, since day one</p>
+      <h1 class="hero-title">Everything here<br> has <em>touched flame.</em></h1>
+      <p class="hero-sub">No shortcuts, no microwaves. Every dish at Foundry &amp; Flame is finished over live coals before it reaches your door — delivered hot, in under 45 minutes.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary">Order Now</a>
+        <a href="#story" class="btn btn-ghost">Our Story</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>4.8<span>★</span></strong><span>2,400+ orders rated</span></div>
+        <div><strong>45<span>min</span></strong><span>avg. delivery time</span></div>
+        <div><strong>100%</strong><span>wood-fired &amp; charcoal</span></div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200" alt="" loading="eager">
+    </div>
+  </section>
+
+  <!-- ============ OFFERS ============ -->
+  <section class="offers-section" id="offers">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Right now</p>
+        <h2>Live offers</h2>
+      </div>
+      <div class="offers-track" id="offersTrack"></div>
+    </div>
+  </section>
+
+  <!-- ============ MENU ============ -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">The menu</p>
+        <h2>Built around the fire</h2>
+      </div>
+
+      <div class="category-filters" id="categoryFilters">
+        <button class="chip active" data-category="all">All</button>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+      <div class="menu-empty" id="menuEmpty" hidden>
+        <p>Nothing matches that search. Try another word, or clear the filter.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story-section" id="story">
+    <div class="container story-inner">
+      <div class="story-media">
+        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1000" alt="Chef tending an open flame grill" loading="lazy">
+      </div>
+      <div class="story-copy">
+        <p class="eyebrow">Our story</p>
+        <h2>Started with one grill and a stubborn idea.</h2>
+        <p>Foundry &amp; Flame began as a single charcoal drum on a Karachi rooftop — the idea that food tastes like where it's cooked, and fire is the most honest kitchen there is. Every recipe on this menu has been rebuilt around live coals, not convenience.</p>
+        <p>Today the kitchen is bigger, but the rule hasn't changed: if it can't take the heat, it doesn't go on the menu.</p>
+        <div class="story-why" id="whyChooseUs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery-section" id="gallery">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Inside the kitchen</p>
+        <h2>Gallery</h2>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-head light">
+        <p class="eyebrow">Word of mouth</p>
+        <h2>What guests are saying</h2>
+      </div>
+      <div class="testimonial-slider" id="testimonialSlider">
+        <button class="slider-arrow prev" id="testimonialPrev" aria-label="Previous review">‹</button>
+        <div class="testimonial-track" id="testimonialTrack"></div>
+        <button class="slider-arrow next" id="testimonialNext" aria-label="Next review">›</button>
+      </div>
+      <div class="slider-dots" id="testimonialDots"></div>
+    </div>
+  </section>
+
+  <!-- ============ NEWSLETTER ============ -->
+  <section class="newsletter-section">
+    <div class="container newsletter-inner">
+      <div>
+        <p class="eyebrow">Stay in the loop</p>
+        <h2>New drops, first dibs.</h2>
+        <p class="muted">Get notified when seasonal menus and weekend offers go live. No spam, just fire.</p>
+      </div>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit" class="btn btn-primary">Notify Me</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq-section">
+    <div class="container faq-inner">
+      <div class="section-head">
+        <p class="eyebrow">Good to know</p>
+        <h2>Frequently asked</h2>
+      </div>
+      <div class="faq-list" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact-section" id="contact">
+    <div class="container contact-inner">
+      <div class="contact-info">
+        <p class="eyebrow">Get in touch</p>
+        <h2>Questions, catering, or feedback?</h2>
+        <p class="muted">Send us a message and it'll land straight in our WhatsApp — no waiting on email.</p>
+        <ul class="contact-list" id="contactDetails"></ul>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="field">
+          <label for="cName">Name</label>
+          <input type="text" id="cName" required>
+        </div>
+        <div class="field">
+          <label for="cPhone">Phone Number</label>
+          <input type="tel" id="cPhone" required>
+        </div>
+        <div class="field">
+          <label for="cSubject">Subject</label>
+          <input type="text" id="cSubject" required>
+        </div>
+        <div class="field">
+          <label for="cMessage">Message</label>
+          <textarea id="cMessage" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.6 14.3c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1l.6-.7c.2-.3.4-.2.7-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.6z"/></svg>
+          Send via WhatsApp
+        </button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="#home" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="30" height="30"><path d="M20 3c3 6-2 8-2 13 0 3.5 2.8 6 6.3 6 2.6 0 4.7-1.5 5.7-3.6C31.5 22 33 26 33 29.5 33 35.3 27.1 40 20 40S7 35.3 7 29.5C7 20 14 15 14 9c0-2.5 1.2-4.7 3-6 .8 3.2 2.3 4.6 3 0z"/></svg>
+        </span>
+        <span class="brand-text">Foundry <em>&</em> Flame</span>
+      </a>
+      <p class="muted">A modern wood-fired kitchen. Cooked over coals, delivered fast.</p>
+      <div class="footer-social" id="footerSocial"></div>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <a href="#menu">Menu</a>
+      <a href="#offers">Offers</a>
+      <a href="#story">Our Story</a>
+      <a href="#gallery">Gallery</a>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <a href="#faq">FAQs</a>
+      <a href="#contact">Contact Us</a>
+      <a href="admin.html">Restaurant Admin</a>
+    </div>
+    <div class="footer-col">
+      <h4>Visit</h4>
+      <p class="muted" id="footerAddress" style="color:white;"></p>
+      <p class="muted" id="footerHours" style="color:white;"></p>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>&copy; <span id="footerYear"></span> Foundry &amp; Flame. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="drawer-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="drawer-header">
+    <h3>Your Order</h3>
+    <button class="icon-btn" id="cartClose" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-footer" id="cartFooter">
+    <div class="promo-row">
+      <input type="text" id="promoInput" placeholder="Promo code">
+      <button class="btn btn-secondary" id="promoApply">Apply</button>
+    </div>
+    <p class="promo-message" id="promoMessage"></p>
+    <div class="totals-row"><span>Subtotal</span><span id="sumSubtotal">Rs. 0</span></div>
+    <div class="totals-row discount-row" id="discountRow" hidden><span>Discount</span><span id="sumDiscount">-Rs. 0</span></div>
+    <div class="totals-row"><span>Delivery</span><span id="sumDelivery">Rs. 0</span></div>
+    <div class="totals-row grand"><span>Total</span><span id="sumTotal">Rs. 0</span></div>
+    <button class="btn btn-primary btn-block btn-lg" id="checkoutBtn">Checkout</button>
+  </div>
+</aside>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div class="drawer-overlay" id="checkoutOverlay"></div>
+<div class="checkout-modal" id="checkoutModal" role="dialog" aria-label="Checkout">
+  <div class="checkout-header">
+    <h3>Checkout</h3>
+    <button class="icon-btn" id="checkoutClose" aria-label="Close checkout">&times;</button>
+  </div>
+  <div class="checkout-body">
+    <form id="checkoutForm" class="checkout-form">
+      <div class="field">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" required>
+      </div>
+      <div class="field">
+        <label for="orderPhone">Phone Number</label>
+        <input type="tel" id="orderPhone" required>
+      </div>
+      <div class="field">
+        <label for="deliveryAddress">Delivery Address</label>
+        <textarea id="deliveryAddress" rows="3" required></textarea>
+      </div>
+      <div class="field">
+        <label for="orderNotes">Notes <span class="optional">(optional)</span></label>
+        <textarea id="orderNotes" rows="2" placeholder="Ring the bell, extra spicy, etc."></textarea>
+      </div>
+      <div class="field">
+        <label>Payment Method</label>
+        <div class="payment-option selected">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          Cash on Delivery
+        </div>
+      </div>
+    </form>
+    <div class="order-summary" id="orderSummary">
+      <h4>Order Summary</h4>
+      <div id="summaryItems"></div>
+      <div class="totals-row"><span>Subtotal</span><span id="coSubtotal">Rs. 0</span></div>
+      <div class="totals-row discount-row" id="coDiscountRow" hidden><span>Discount</span><span id="coDiscount">-Rs. 0</span></div>
+      <div class="totals-row"><span>Delivery</span><span id="coDelivery">Rs. 0</span></div>
+      <div class="totals-row grand"><span>Grand Total</span><span id="coTotal">Rs. 0</span></div>
+    </div>
+  </div>
+  <div class="checkout-footer">
+    <button class="btn btn-primary btn-block btn-lg" id="placeOrderBtn">
+      Place Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<a href="#" class="whatsapp-float" id="whatsappFloat" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.6 14.3c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1l.6-.7c.2-.3.4-.2.7-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.6z"/></svg>
+</a>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+</button>
+
+<script src="js/data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

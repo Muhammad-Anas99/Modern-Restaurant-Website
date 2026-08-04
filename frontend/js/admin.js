@@ -58,8 +58,12 @@
   });
 
   async function enterAdmin() {
-    document.getElementById('adminLogin').hidden = true;
-    document.getElementById('adminShell').hidden = false;
+    // Use inline style, not the `hidden` attribute: admin.css sets an unconditional
+    // `display` on both .admin-login and .admin-shell, and an author stylesheet rule
+    // always beats the browser's default `[hidden] { display: none }` rule at equal
+    // specificity — so `.hidden = true/false` was silently doing nothing.
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminShell').style.display = '';
     document.getElementById('adminUser').textContent = `${state.user.name} · ${state.user.email}`;
     await loadAllData();
     switchView('dashboard');
@@ -67,8 +71,8 @@
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
     state.token = null;
-    document.getElementById('adminShell').hidden = true;
-    document.getElementById('adminLogin').hidden = false;
+    document.getElementById('adminShell').style.display = 'none';
+    document.getElementById('adminLogin').style.display = '';
     document.getElementById('loginForm').reset();
   });
 

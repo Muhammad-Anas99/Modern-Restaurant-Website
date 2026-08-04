@@ -42,8 +42,8 @@ const SAMPLE_PROMO_CODES = [
 const SAMPLE_SETTINGS = {
   restaurantName: 'Foundry & Flame',
   tagline: 'A modern wood-fired kitchen',
-  whatsappNumber: '923001234567',
-  contactNumber: '+92 300 1234567',
+  whatsappNumber: '923294847025',
+  contactNumber: '+92 3294847025',
   address: 'Plot 12, Khayaban-e-Ittehad, Karachi',
   businessHours: 'Mon–Sun, 12:00 PM – 11:30 PM',
   currencySymbol: 'Rs.',

@@ -5,7 +5,10 @@
  * Until then, every call below fails fast and the app falls back
  * to the bundled sample data in js/data.js so the site still works.
  */
-const API_BASE = window.__API_BASE__ || '/api';
+// Strip any trailing slash so `${API_BASE}${path}` never produces a double slash
+// (e.g. config.js set to '.../api/' would otherwise build '.../api//auth/login',
+// which Vercel's rewrite won't match — showing up in the browser as "Failed to fetch").
+const API_BASE = (window.__API_BASE__ || '/api').replace(/\/+$/, '');
 const FETCH_TIMEOUT = 4000;
 
 async function apiRequest(path, options = {}) {

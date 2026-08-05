@@ -557,7 +557,18 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height
 .summary-line .si-name { color: var(--ink); }
 .summary-line .si-qty { color: var(--ink-soft); }
 .checkout-footer { padding: 20px 28px; border-top: 1px solid var(--line); background: #fff; }
-@media (max-width: 760px) { .checkout-body { grid-template-columns: 1fr; } .checkout-modal { top: 2vh; max-height: 96vh; } }
+@media (max-width: 760px) {
+  .checkout-body { grid-template-columns: 1fr; padding: 20px; }
+  .checkout-modal {
+    top: 0; left: 0; transform: translateY(16px) scale(0.98);
+    width: 100%; max-width: 100%;
+    height: 100dvh; max-height: 100dvh;
+    border-radius: 0;
+  }
+  .checkout-modal.open { transform: translateY(0) scale(1); }
+  .checkout-header { padding: 16px 20px; }
+  .checkout-footer { padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* ---------- WhatsApp float + back to top ---------- */
 .whatsapp-float {

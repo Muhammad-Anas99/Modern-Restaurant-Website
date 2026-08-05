@@ -39,7 +39,10 @@
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     const errEl = document.getElementById('loginError');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
     errEl.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in…';
 
     try {
       const res = await apiRequest('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
@@ -48,12 +51,11 @@
       state.demoMode = false;
       await enterAdmin();
     } catch (err) {
-      // No live backend reachable — fall back to a local demo session so the panel is still usable.
-      state.token = 'demo-token';
-      state.user = { name: 'Demo Admin', email: email || 'demo@foundryflame.com' };
-      state.demoMode = true;
-      toast('No backend connected — showing demo mode with sample data.', 'error');
-      await enterAdmin();
+      // Demo-mode fallback has been removed — a failed or unreachable login must never grant access.
+      errEl.textContent = err.message || 'Could not sign in. Check your credentials and that the API server is running.';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
     }
   });
 

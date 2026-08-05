@@ -5,7 +5,7 @@
  * Until then, every call below fails fast and the app falls back
  * to the bundled sample data in js/data.js so the site still works.
  */
-const API_BASE = window.__API_BASE__ || 'http://localhost:5000/api';
+const API_BASE = window.__API_BASE__ || '/api';
 const FETCH_TIMEOUT = 4000;
 
 async function apiRequest(path, options = {}) {
@@ -49,15 +49,9 @@ const Api = {
         body: JSON.stringify({ code, subtotal })
       });
     } catch {
-      // Offline fallback: validate against the bundled sample codes
-      const promo = SAMPLE_PROMO_CODES.find((p) => p.code === code.toUpperCase());
-      if (!promo) return { valid: false, reason: 'That promo code does not exist.' };
-      if (subtotal < (promo.minOrderAmount || 0)) {
-        return { valid: false, reason: `Minimum order amount is ${promo.minOrderAmount}.` };
-      }
-      let discount = promo.discountType === 'percentage' ? (subtotal * promo.discountValue) / 100 : promo.discountValue;
-      if (promo.maxDiscountAmount != null) discount = Math.min(discount, promo.maxDiscountAmount);
-      return { valid: true, discount: Math.round(Math.min(discount, subtotal) * 100) / 100 };
+      // Demo/offline promo validation has been disabled — a promo code must always be
+      // checked against the live database, never approved locally against sample data.
+      return { valid: false, reason: 'Could not verify this code right now. Please try again in a moment.' };
     }
   },
   async placeOrder(payload) {

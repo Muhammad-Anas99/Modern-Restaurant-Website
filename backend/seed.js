@@ -227,8 +227,8 @@ async function run() {
     });
   }
 
-  const adminEmail = (process.env.SEED_ADMIN_EMAIL || '').toLowerCase();
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD || '';
+  const adminEmail = (process.env.SEED_ADMIN_EMAIL || 'owner@yourrestaurant.com').toLowerCase();
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'change_this_password';
   const existingAdmin = await User.findOne({ email: adminEmail });
   if (!existingAdmin) {
     await User.create({

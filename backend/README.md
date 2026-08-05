@@ -39,5 +39,13 @@ everywhere instantly.
 
 ## Deploying
 
-Any Node host works (Render, Railway, Fly.io, a VPS). Point `MONGO_URI` at Atlas,
-set `CORS_ORIGIN` to your deployed frontend domain(s), and set a strong `JWT_SECRET`.
+Any Node host works (Render, Railway, Fly.io, a VPS, or Vercel — see below). Point
+`MONGO_URI` at Atlas, set `CORS_ORIGIN` to your deployed frontend domain(s), and set
+a strong `JWT_SECRET`.
+
+### Deploying this backend to Vercel
+
+This folder already includes `vercel.json` and `api/index.js` so it runs as a Vercel
+serverless function — see the root `README.md` for the full step-by-step guide
+(project setup, required environment variables, and how to connect the frontend
+to it once it's live).

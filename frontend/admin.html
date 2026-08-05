@@ -33,7 +33,7 @@
     </div>
     <p class="login-error" id="loginError"></p>
     <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
-    <p class="login-hint">Demo mode: no backend connected yet? Any email/password signs you into a local demo with sample data.</p>
+    <p class="login-hint">Access is restricted to admin accounts created via the backend (see <code>backend/seed.js</code> or <code>POST /api/auth/login</code>).</p>
   </form>
 </div>
 
@@ -208,6 +208,7 @@
   <div class="admin-modal-body" id="modalBody"></div>
 </div>
 
+<script src="js/config.js"></script>
 <script src="js/data.js"></script>
 <script src="js/api.js"></script>
 <script src="js/admin.js"></script>

@@ -30,6 +30,18 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
+// Ensures MongoDB is connected before any data route runs. Uses the cached connection
+// from config/db.js, so on a warm serverless invocation this resolves instantly.
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('Database connection failed:', err.message);
+    res.status(503).json({ message: 'Database is unavailable right now. Please try again shortly.' });
+  }
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/foods', foodRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -59,8 +71,16 @@ process.on('unhandledRejection', (reason) => {
 
 const PORT = process.env.PORT || 5000;
 
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`Foundry & Flame API running on port ${PORT}`));
-});
+// Only bind a port for local/traditional hosting (`node server.js` or `npm run dev`).
+// On Vercel this file is required as a module by api/index.js, so require.main !== module
+// and app.listen() never runs — the platform's own HTTP layer handles each request instead.
+if (require.main === module) {
+  connectDB()
+    .then(() => app.listen(PORT, () => console.log(`Foundry & Flame API running on port ${PORT}`)))
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB, server not started:', err.message);
+      process.exit(1);
+    });
+}
 
 module.exports = app;

@@ -6,13 +6,13 @@
   background: radial-gradient(circle at 20% 20%, rgba(201,138,44,0.18), transparent 55%), var(--ink);
   padding: 20px;
 } */
- .admin-login {
+.admin-login {
     position: fixed;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(20, 17, 15, 1);
+    background: radial-gradient(circle at 20% 20%, rgba(201,138,44,0.18), transparent 55%), var(--ink);
     z-index: 9999;
     overflow: hidden;
 }

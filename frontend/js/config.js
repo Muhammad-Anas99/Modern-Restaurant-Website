@@ -6,4 +6,4 @@
  * Example once your backend is live on Vercel:
  *   window.__API_BASE__ = 'https://foundry-flame-backend.vercel.app/api';
  */
-window.__API_BASE__ = 'https://your-backend-project.vercel.app/api';
+window.__API_BASE__ = 'https://modernrestaurant-website.vercel.app/api';

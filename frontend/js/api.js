@@ -5,8 +5,14 @@
  * Until then, every call below fails fast and the app falls back
  * to the bundled sample data in js/data.js so the site still works.
  */
-const API_BASE = window.__API_BASE__ || '/api';
-const FETCH_TIMEOUT = 4000;
+// Strip any trailing slash so `${API_BASE}${path}` never produces a double slash
+// (e.g. config.js set to '.../api/' would otherwise build '.../api//auth/login',
+// which Vercel's rewrite won't match — showing up in the browser as "Failed to fetch").
+const API_BASE = (window.__API_BASE__ || '/api').replace(/\/+$/, '');
+// 12s, not 4s: a cold serverless start connecting to MongoDB for the first time can
+// take longer than a few seconds, and a too-short timeout here just masks the real
+// error behind a confusing "signal aborted" instead of showing what actually failed.
+const FETCH_TIMEOUT = 12000;
 
 async function apiRequest(path, options = {}) {
   const controller = new AbortController();

@@ -354,6 +354,22 @@
   </div>
 </div>
 
+<!-- ============ CONFIRM ORDER SENT MODAL ============ -->
+<div class="drawer-overlay" id="confirmOverlay"></div>
+<div class="confirm-modal" id="confirmOrderModal" role="dialog" aria-label="Confirm order sent">
+  <div class="confirm-modal-inner">
+    <div class="confirm-icon" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.6 14.3c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1l.6-.7c.2-.3.4-.2.7-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.6z"/></svg>
+    </div>
+    <h3>Did you send your order on WhatsApp?</h3>
+    <p class="muted">We've opened WhatsApp with your order filled in. Your order is only placed with the restaurant once you actually tap Send there.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="confirmNotSent">Not yet</button>
+      <button class="btn btn-primary" id="confirmSent">Yes, I sent it</button>
+    </div>
+  </div>
+</div>
+
 <a href="#" class="whatsapp-float" id="whatsappFloat" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.6 14.3c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.2.1.3 0 .5-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.9 1.5 1.9 2.4 1.3 1.2 2.4 1.5 2.7 1.7.3.2.5.1.6-.1l.6-.7c.2-.3.4-.2.7-.1l1.7.8c.2.1.4.2.4.3.1.2.1.9-.1 1.6z"/></svg>
 </a>

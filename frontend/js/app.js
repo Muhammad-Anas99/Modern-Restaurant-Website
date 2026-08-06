@@ -11,6 +11,7 @@
     searchTerm: '',
     cart: [], // [{ foodId, name, price, image, quantity }]
     promo: null, // { code, discount }
+    pendingOrder: null, // { payload, reference } — set when WhatsApp opens, cleared once confirmed sent
     testimonialIndex: 0
   };
 
@@ -320,7 +321,7 @@
     document.getElementById('coTotal').textContent = money(total);
   }
 
-  document.getElementById('placeOrderBtn').addEventListener('click', async () => {
+  document.getElementById('placeOrderBtn').addEventListener('click', () => {
     const name = document.getElementById('fullName').value.trim();
     const phone = document.getElementById('orderPhone').value.trim();
     const address = document.getElementById('deliveryAddress').value.trim();
@@ -351,36 +352,72 @@
       grandTotal
     };
 
-    const placeBtn = document.getElementById('placeOrderBtn');
-    placeBtn.disabled = true;
-    placeBtn.textContent = 'Placing order…';
+    // Not saved yet — the order only reaches the database once the customer confirms
+    // they actually sent it in WhatsApp (see confirmSent/confirmNotSent below). There's
+    // no browser API that reports whether someone tapped Send inside WhatsApp, so this
+    // explicit confirmation step is the closest honest substitute for that signal.
+    const reference = `REF-${Date.now().toString(36).toUpperCase()}`;
+    state.pendingOrder = { payload, reference };
 
+    const waNumber = (state.settings.whatsappNumber || '').replace(/\D/g, '');
+    const message = buildWhatsappOrderMessage(reference, payload);
+    const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank', 'noopener');
+
+    closeCheckout();
+    openConfirmModal();
+  });
+
+  /* ---------------- Confirm-sent step (only now does the order get saved) ---------------- */
+  const confirmModal = document.getElementById('confirmOrderModal');
+  const confirmOverlay = document.getElementById('confirmOverlay');
+
+  function openConfirmModal() {
+    confirmModal.classList.add('open');
+    confirmOverlay.classList.add('open');
+  }
+  function closeConfirmModal() {
+    confirmModal.classList.remove('open');
+    confirmOverlay.classList.remove('open');
+  }
+
+  document.getElementById('confirmSent').addEventListener('click', async () => {
+    if (!state.pendingOrder) { closeConfirmModal(); return; }
+    const btn = document.getElementById('confirmSent');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
     try {
-      const order = await Api.placeOrder(payload);
-      const waNumber = (state.settings.whatsappNumber || '').replace(/\D/g, '');
-      const message = buildWhatsappOrderMessage(order, payload);
-      const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank', 'noopener');
-
-      toast('Order placed! Opening WhatsApp…');
+      await Api.placeOrder(state.pendingOrder.payload);
+      toast('Order confirmed — thank you!');
       state.cart = [];
       state.promo = null;
+      state.pendingOrder = null;
       renderCart();
-      closeCheckout();
       document.getElementById('checkoutForm').reset();
     } catch (err) {
-      toast('Something went wrong placing your order. Please try again.', 'error');
+      toast('Could not save your order — please try again or contact us directly.', 'error');
     } finally {
-      placeBtn.disabled = false;
-      placeBtn.textContent = 'Place Order via WhatsApp';
+      btn.disabled = false;
+      btn.textContent = 'Yes, I sent it';
+      closeConfirmModal();
     }
   });
 
-  function buildWhatsappOrderMessage(order, payload) {
+  document.getElementById('confirmNotSent').addEventListener('click', () => {
+    // Cart and pending order are kept intact — nothing is saved. The customer can
+    // reopen checkout later and try again whenever they're ready.
+    closeConfirmModal();
+    toast('No problem — your cart is still here whenever you\'re ready.');
+  });
+  confirmOverlay.addEventListener('click', () => {
+    closeConfirmModal();
+  });
+
+  function buildWhatsappOrderMessage(reference, payload) {
     const lines = [];
     lines.push(`Hi ${state.settings.restaurantName || 'Foundry & Flame'}! I'd like to place an order.`);
     lines.push('');
-    lines.push(`*Order:* ${order.orderNumber || ''}`);
+    lines.push(`*Reference:* ${reference}`);
     lines.push(`*Name:* ${payload.customerName}`);
     lines.push(`*Phone:* ${payload.phone}`);
     lines.push(`*Delivery Address:* ${payload.address}`);

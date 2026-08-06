@@ -482,7 +482,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height
 .site-footer { background: var(--ink); color: var(--cream-text); padding: 80px 0 0; }
 .footer-inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 60px; border-bottom: 1px solid var(--line-dark); }
 .footer-brand .brand-text { color: var(--cream-text); }
-.footer-brand .muted { margin: 14px 0 18px; max-width: 280px; color:white; }
+.footer-brand .muted { margin: 14px 0 18px; max-width: 280px;color:white; }
 .footer-social { display: flex; gap: 10px; }
 .footer-social a {
   width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-dark);
@@ -611,3 +611,23 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height
   .whatsapp-float { width: 52px; height: 52px; bottom: 18px; left: 18px; }
   .back-to-top { width: 42px; height: 42px; bottom: 18px; right: 18px; }
 }
+
+/* ---------- Confirm order sent modal ---------- */
+.confirm-modal {
+  position: fixed; top: 50%; left: 50%; width: min(400px, 90vw); z-index: 850;
+  background: var(--parchment); border-radius: var(--radius-lg); box-shadow: var(--shadow-lift);
+  transform: translate(-50%, -50%) scale(0.95); opacity: 0; visibility: hidden;
+  transition: transform 0.35s var(--ease), opacity 0.35s var(--ease), visibility 0.35s var(--ease);
+}
+.confirm-modal.open { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
+.confirm-modal-inner { padding: 34px 28px; text-align: center; }
+.confirm-icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
+  background: rgba(37,211,102,0.14); color: #1F8A45;
+  display: flex; align-items: center; justify-content: center;
+}
+.confirm-modal-inner h3 { font-size: 1.2rem; margin-bottom: 10px; }
+.confirm-modal-inner p { font-size: 0.9rem; margin-bottom: 24px; }
+.confirm-actions { display: flex; gap: 10px; }
+.confirm-actions .btn { flex: 1; }
+#confirmOverlay { z-index: 840; }

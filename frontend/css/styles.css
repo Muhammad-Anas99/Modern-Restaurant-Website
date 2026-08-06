@@ -66,12 +66,7 @@ ul { list-style: none; }
   margin-bottom: 10px;
   display: inline-block;
 }
-#footerAddress{
-  color:white;
-}
-#footerHours{
-  color:white;
-}
+
 h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
 
 .section-head { max-width: 620px; margin-bottom: 44px; }

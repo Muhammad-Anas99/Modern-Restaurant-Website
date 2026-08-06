@@ -1,0 +1,12 @@
+{
+  "name": "Foundry & Flame",
+  "short_name": "Foundry & Flame",
+  "description": "A modern wood-fired kitchen — order online.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#F7F3EC",
+  "theme_color": "#16130F",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

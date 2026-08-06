@@ -13,6 +13,7 @@ const offerRoutes = require('./routes/offerRoutes');
 const promoCodeRoutes = require('./routes/promoCodeRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/offers', offerRoutes);
 app.use('/api/promo-codes', promoCodeRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/uploads', uploadRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ message: 'Route not found.' }));

@@ -1,20 +1,10 @@
 .admin-body { background: var(--parchment-2); }
 
 /* ---------- Login ---------- */
-/* .admin-login {
+.admin-login {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   background: radial-gradient(circle at 20% 20%, rgba(201,138,44,0.18), transparent 55%), var(--ink);
   padding: 20px;
-} */
-.admin-login {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: radial-gradient(circle at 20% 20%, rgba(201,138,44,0.18), transparent 55%), var(--ink);
-    z-index: 9999;
-    overflow: hidden;
 }
 .login-card {
   width: 100%; max-width: 400px; background: var(--parchment);
@@ -49,6 +39,20 @@
 }
 .admin-nav button:hover { background: rgba(255,255,255,0.06); color: var(--cream-text); }
 .admin-nav button.active { background: var(--ember); color: #1B1300; font-weight: 700; }
+
+.nav-badge {
+  margin-left: auto;
+  background: #E4514A; color: #fff;
+  font-size: 0.7rem; font-weight: 800;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  animation: badgePop 0.35s var(--ease);
+}
+.admin-nav button.active .nav-badge { background: #1B1300; color: var(--ember); }
+@keyframes badgePop { from { transform: scale(0.4); opacity: 0; } }
+.nav-badge.pulse { animation: badgePulse 1s var(--ease) 2; }
+@keyframes badgePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
 
 .admin-logout {
   display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px;
@@ -139,4 +143,20 @@
   .admin-mobile-toggle { display: flex; }
   .admin-topbar { padding: 16px 20px; }
   .admin-content { padding: 20px; }
+}
+
+/* ---------- Image upload control (menu / offer image fields) ---------- */
+.image-upload-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.upload-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 15px; border-radius: 999px; border: 1.5px solid var(--line);
+  font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+  transition: border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.upload-btn:hover { border-color: var(--ember); color: var(--ink); }
+.upload-status { font-size: 0.8rem; color: var(--pine); font-weight: 600; }
+.image-preview {
+  width: 100%; max-width: 220px; aspect-ratio: 4/3; object-fit: cover;
+  border-radius: var(--radius-sm); margin-top: 10px; border: 1px solid var(--line);
+  background: var(--parchment-2);
 }

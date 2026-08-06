@@ -68,15 +68,76 @@
     document.getElementById('adminShell').style.display = '';
     document.getElementById('adminUser').textContent = `${state.user.name} · ${state.user.email}`;
     await loadAllData();
+    state.knownOrderIds = new Set(state.orders.map((o) => o._id || o.orderNumber));
     switchView('dashboard');
+    startOrderPolling();
   }
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
     state.token = null;
+    stopOrderPolling();
+    document.title = 'Admin — Foundry & Flame';
     document.getElementById('adminShell').style.display = 'none';
     document.getElementById('adminLogin').style.display = '';
     document.getElementById('loginForm').reset();
   });
+
+  /* ---------------- Live order visibility: polling + badge + sound ---------------- */
+  let orderPollTimer = null;
+  const ORDER_POLL_INTERVAL_MS = 25000;
+
+  function startOrderPolling() {
+    stopOrderPolling();
+    orderPollTimer = setInterval(pollForNewOrders, ORDER_POLL_INTERVAL_MS);
+  }
+  function stopOrderPolling() {
+    if (orderPollTimer) clearInterval(orderPollTimer);
+    orderPollTimer = null;
+  }
+
+  async function pollForNewOrders() {
+    if (state.demoMode || !state.token) return;
+    try {
+      const orders = await authedRequest('/orders');
+      const newOnes = orders.filter((o) => !state.knownOrderIds.has(o._id || o.orderNumber));
+      state.orders = orders;
+      state.knownOrderIds = new Set(orders.map((o) => o._id || o.orderNumber));
+
+      if (newOnes.length > 0) {
+        playNotificationSound();
+        toast(newOnes.length === 1
+          ? `New order from ${newOnes[0].customerName} — ${money(newOnes[0].grandTotal)}`
+          : `${newOnes.length} new orders just came in`);
+        const badge = document.getElementById('ordersBadge');
+        badge.classList.add('pulse');
+        setTimeout(() => badge.classList.remove('pulse'), 2000);
+      }
+
+      renderDashboard();
+      if (state.currentView === 'orders') renderOrderTable();
+    } catch {
+      // Silent — a background poll failing (e.g. a brief network blip) shouldn't
+      // interrupt whatever the admin is doing; the next poll will just try again.
+    }
+  }
+
+  function playNotificationSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(1108, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } catch {
+      // Web Audio unavailable/blocked — the toast + badge still cover visibility.
+    }
+  }
 
   /* ---------------- Data loading ---------------- */
   async function loadAllData() {
@@ -133,6 +194,8 @@
     const totalFoods = state.foods.length;
     const activeOffers = state.offers.filter((o) => o.active).length;
 
+    updateOrdersBadge(pendingOrders);
+
     document.getElementById('statGrid').innerHTML = `
       <div class="stat-card"><span class="stat-icon">🍽</span><div class="stat-label">Menu Items</div><div class="stat-value">${totalFoods}</div></div>
       <div class="stat-card"><span class="stat-icon">🎯</span><div class="stat-label">Active Offers</div><div class="stat-value">${activeOffers}</div></div>
@@ -151,6 +214,13 @@
   }
 
   /* ---------------- Menu Management ---------------- */
+  function updateOrdersBadge(pendingCount) {
+    const badge = document.getElementById('ordersBadge');
+    badge.textContent = pendingCount > 99 ? '99+' : String(pendingCount);
+    badge.hidden = pendingCount === 0;
+    document.title = pendingCount > 0 ? `(${pendingCount}) Admin — Foundry & Flame` : 'Admin — Foundry & Flame';
+  }
+
   function categoryName(catId) {
     const c = state.categories.find((c) => c._id === catId || c._id === (catId?._id));
     return c ? c.name : '—';
@@ -199,7 +269,7 @@
       <div class="field"><label>Name</label><input id="fName" value="${food?.name || ''}"></div>
       <div class="field"><label>Description</label><textarea id="fDesc" rows="2">${food?.description || ''}</textarea></div>
       <div class="field"><label>Category</label><select id="fCategory">${categoryOptions}</select></div>
-      <div class="field"><label>Image URL</label><input id="fImage" value="${food?.image || ''}"></div>
+      ${imageFieldHtml({ urlId: 'fImage', label: 'Image', currentUrl: food?.image })}
       <div class="check-grid">
         <div class="field"><label>Original Price</label><input type="number" id="fOriginalPrice" value="${food?.originalPrice || ''}"></div>
         <div class="field"><label>Sale Price <span class="optional">(optional)</span></label><input type="number" id="fSalePrice" value="${food?.salePrice ?? ''}"></div>
@@ -217,6 +287,7 @@
     `);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
     document.getElementById('modalSave').addEventListener('click', () => saveFood(food?._id));
+    wireImageUpload('fImage');
   }
 
   async function saveFood(id) {
@@ -382,7 +453,7 @@
     openModal(offer ? 'Edit Offer' : 'Add Offer', `
       <div class="field"><label>Title</label><input id="ofTitle" value="${offer?.title || ''}"></div>
       <div class="field"><label>Description</label><textarea id="ofDesc" rows="2">${offer?.description || ''}</textarea></div>
-      <div class="field"><label>Banner Image URL</label><input id="ofBanner" value="${offer?.bannerImage || ''}"></div>
+      ${imageFieldHtml({ urlId: 'ofBanner', label: 'Banner Image', currentUrl: offer?.bannerImage })}
       <div class="field"><label>Discount Label</label><input id="ofDiscount" placeholder="20% OFF" value="${offer?.discountLabel || ''}"></div>
       <div class="field"><label>Expires</label><input type="date" id="ofExpires" value="${expires}"></div>
       <label class="check-row"><input type="checkbox" id="ofActive" ${offer?.active !== false ? 'checked' : ''}> Active</label>
@@ -392,6 +463,7 @@
       </div>`);
     document.getElementById('modalCancel').addEventListener('click', closeModal);
     document.getElementById('modalSave').addEventListener('click', () => saveOffer(offer?._id));
+    wireImageUpload('ofBanner');
   }
 
   async function saveOffer(id) {
@@ -565,4 +637,72 @@
   document.getElementById('modalClose').addEventListener('click', closeModal);
   modalOverlay.addEventListener('click', closeModal);
   function val(id) { return document.getElementById(id).value.trim(); }
+
+  /* ---------------- Image upload (menu / offer images) ---------------- */
+  function imageFieldHtml({ urlId, label, currentUrl }) {
+    return `
+      <div class="field">
+        <label>${label}</label>
+        <input id="${urlId}" value="${currentUrl || ''}" placeholder="Paste an image URL, or upload one below">
+        <div class="image-upload-row">
+          <label class="upload-btn" for="${urlId}File">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Image
+          </label>
+          <input type="file" id="${urlId}File" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" hidden>
+          <span class="upload-status" id="${urlId}Status"></span>
+        </div>
+        <img class="image-preview" id="${urlId}Preview" src="${currentUrl || ''}" ${currentUrl ? '' : 'hidden'} alt="">
+      </div>`;
+  }
+
+  function wireImageUpload(urlId) {
+    const fileInput = document.getElementById(`${urlId}File`);
+    const urlInput = document.getElementById(urlId);
+    const preview = document.getElementById(`${urlId}Preview`);
+    const status = document.getElementById(`${urlId}Status`);
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      status.textContent = 'Uploading…';
+      fileInput.disabled = true;
+      try {
+        const url = await uploadImageFile(file);
+        urlInput.value = url;
+        preview.src = url;
+        preview.hidden = false;
+        status.textContent = 'Uploaded';
+        setTimeout(() => { if (status.textContent === 'Uploaded') status.textContent = ''; }, 2000);
+      } catch (err) {
+        toast(err.message || 'Upload failed.', 'error');
+        status.textContent = '';
+      } finally {
+        fileInput.disabled = false;
+        fileInput.value = '';
+      }
+    });
+
+    urlInput.addEventListener('input', () => {
+      if (urlInput.value) { preview.src = urlInput.value; preview.hidden = false; }
+      else preview.hidden = true;
+    });
+  }
+
+  async function uploadImageFile(file) {
+    if (state.demoMode) throw new Error('Image upload needs a connected backend.');
+    const formData = new FormData();
+    formData.append('image', file);
+    // Not using apiRequest() here — it always sends Content-Type: application/json,
+    // which would break a multipart file upload. The browser sets the correct
+    // multipart boundary itself as long as we don't set Content-Type manually.
+    const res = await fetch(`${API_BASE}/uploads`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${state.token}` },
+      body: formData
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || `Upload failed (${res.status})`);
+    return data.url;
+  }
 })();

@@ -16,6 +16,23 @@ npm run dev              # starts the API on http://localhost:5000
 `MONGO_URI` can point at a local MongoDB instance or a free MongoDB Atlas cluster
 (recommended for production — see mongodb.com/atlas).
 
+## Image uploads
+
+`POST /api/uploads` (admin-only, `multipart/form-data`, field name `image`) uploads a
+menu/offer image and returns `{ url }`. It streams the file straight to
+[Vercel Blob](https://vercel.com/docs/storage/vercel-blob) — nothing is written to
+local disk, which matters because Vercel's serverless filesystem is read-only/ephemeral.
+
+To enable it:
+1. Vercel dashboard → your **backend** project → **Storage** → **Create Database** → **Blob**.
+2. Connect it to the project — Vercel adds `BLOB_READ_WRITE_TOKEN` to your environment
+   variables automatically.
+3. For local development, copy that same token: **Storage → your Blob store → .env.local**
+   tab, and paste it into your local `backend/.env` as `BLOB_READ_WRITE_TOKEN=...`.
+
+Without this token, image uploads return a clear 500 error telling you it's not
+configured — pasting an image URL directly still works either way.
+
 ## Auth
 
 `POST /api/auth/login` with `{ email, password }` returns a JWT. Send it as
@@ -32,6 +49,7 @@ the first admin account from `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` in `.env
 | `/api/promo-codes` | `POST /validate` | `GET /`, `POST /`, `PUT /:id`, `DELETE /:id` |
 | `/api/orders` | `POST /` (place order) | `GET /`, `GET /stats`, `PATCH /:id/status` |
 | `/api/settings` | `GET /` | `PUT /` |
+| `/api/uploads` | — | `POST /` (multipart `image` field) |
 
 A discounted food item automatically exposes `effectivePrice` and `discountPercent` — the
 frontend never needs manual math, so a sale price set in the admin panel is reflected
